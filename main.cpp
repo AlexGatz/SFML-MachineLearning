@@ -19,14 +19,16 @@ public:
     // Helper func to make nodes of snake objects point at the previous node
     float angleToPointAt(CircleShape& originalShape, CircleShape& targetShape, float offset)
     {
-	
+	// Takes the distance from the origin to the target and calculates tan(y/x) to get the desired angle.
 	desiredAngle = atan2(targetShape.getPosition().y - originalShape.getPosition().y, targetShape.getPosition().x - originalShape.getPosition().x) * (180/PI);
-	
+
+	// From [-180, 180] to [0, 360]
 	if(desiredAngle < 0)
 	    {
 		desiredAngle = 360 - (desiredAngle);
 	    }
-
+	
+	// Gives the option to offset the angle for use with different shapes.
 	desiredAngle += offset;
 	
 	return desiredAngle;
@@ -64,39 +66,17 @@ public:
 	shape.setTexture(&texture);
     }
 
-    void createSnakeTail(int nodes)
-    {
-        for(int i = 0; i++; i < nodes)
-	    {
-		//add snake node to list and set each angle to follow the previous node
-	    }
-    }
+    // Looking into using ternary to construct tail from vector of snakes
+    // void createSnakeTail(int nodes)
+    // {
+    //     for(int i = 0; i++; i < nodes)
+    // 	    {
+    // 		//add snake node to list and set each angle to follow the previous node
+    // 	    }
+    // }
     
-    void update(/*RenderWindow& refWindow*/ CircleShape& target)
+    void update(CircleShape& target)
     {
-	// // Use the window created in main() and get the mouse position from it.
-	// mousePos = Mouse::getPosition(refWindow);
-
-	// cout << mousePos.x << "\n";
-	// cout << mousePos.y << "\n";
-	
-	// // Take the distance form the mouse to the current shape pos and the take tan(y/x)
-	// // to obtain the proper angle between the two. 
-	// angle = atan2(mousePos.y - shape.getPosition().y, mousePos.x - shape.getPosition().x) * (180/PI);
-	// cout << angle << "\n";
-
-	// // Since the angle is calculated from [-180, 180] it needs to be converted to [0, 360]
-	// // to work with sfml setRotation().
-	// if(angle < 0)
-	//     {
-	// 	angle = 360 - (-angle);
-	//     }
-
-	// // Triangle oriented incorrectly, -30f rotates the triangle so a point is facing the mouse.
-	// angle -= 30.f;
-	// shape.setRotation(angle);
-	// // shape.move(velocity)
-
 	shape.setRotation(util.angleToPointAt(shape,target,0.f));
     }
 };
