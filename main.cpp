@@ -188,7 +188,7 @@ int main()
 		window.close();
 	    }
         }
-p
+
 	// Clear the window each frame
         window.clear();
 	
