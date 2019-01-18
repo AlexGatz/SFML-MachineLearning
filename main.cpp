@@ -11,7 +11,7 @@ using namespace sf;
 #define PI 3.14159265
 
 constexpr int windowWidth{800}, windowHeight{600};
-constexpr float snakeSize{30.f}, snakePoints{3};
+//constexpr float snakeSize{30.f}, snakePoints{3};
 
 // ------------------------------------------------------------------------------------ Utilities
 
@@ -48,103 +48,147 @@ public:
 
 // ----------------------------------------------------------------------------------- Main Objects
 
-class Snake
-{
-private:
+// class Snake
+// {
+// private:
 
-    Vector2f velocity; // Not used yet
-    float angle; // I mean... its an angle...
-    Util util; // Need to use to force each snakeNode to face the previous one
-    Texture texture; // png for new look for the snake nodes
-    Color snakeColor; // don't really need this atm, but it makes things look nice
-    float startPosX; // class scope position variable
-    float adjustedPosX; // holds value of adjusted value used to initialize each snake node
-    float startPosY; // same as x
-    int numberOfNodes; // should probably be used localy for every snake obeject ... idk
-    CircleShape snake; // its a snake... really this is the head of the snake
+//     Vector2f velocity; // Not used yet
+//     float angle; // I mean... its an angle...
+//     Util util; // Need to use to force each snakeNode to face the previous one
+//     Texture texture; // png for new look for the snake nodes
+//     Color snakeColor; // don't really need this atm, but it makes things look nice
+//     float startPosX; // class scope position variable
+//     float adjustedPosX; // holds value of adjusted value used to initialize each snake node
+//     float startPosY; // same as x
+//     int numberOfNodes; // should probably be used localy for every snake obeject ... idk
+//     CircleShape snake; // its a snake... really this is the head of the snake
 
-    // this is actually the tail at this time... maybe I don't need the snake head? but somehow
-    // I want to control the head and have the tail lag behind... idk...
-    vector<CircleShape> snakeNodes; 
+//     // this is actually the tail at this time... maybe I don't need the snake head? but somehow
+//     // I want to control the head and have the tail lag behind... idk...
+//     vector<CircleShape> snakeNodes; 
     
-    // Looking into using ternary to construct tail from vector of snakes
-    void snakeTail()
-    {
-	cout << "snakeTail() called." << "\n";
-	cout << "Number of nodes: " << numberOfNodes << "\n";
-	// Step through and set values for each snakeNode
+//     // Looking into using ternary to construct tail from vector of snakes
+//     void snakeTail()
+//     {
+// 	cout << "snakeTail() called." << "\n";
+// 	cout << "Number of nodes: " << numberOfNodes << "\n";
+// 	// Step through and set values for each snakeNode
 
-	// Initialize
-	snakeNodes.resize(numberOfNodes);
+// 	// Initialize
+// 	snakeNodes.resize(numberOfNodes);
 
-	cout << "allocate memory for snakeNodes" << "\n";
-	adjustedPosX = startPosX;
+// 	cout << "allocate memory for snakeNodes" << "\n";
+// 	adjustedPosX = startPosX;
 
-	cout << "adjustedPosX: " << adjustedPosX << "\n";
+// 	cout << "adjustedPosX: " << adjustedPosX << "\n";
 	
-        for(int i = 0; i < numberOfNodes; i++)
-	{
-	    cout << "for loop working..." << "\n";
-	    // Need to adjust start pos by some amount
-	    adjustedPosX += 10;
+//         for(int i = 0; i < numberOfNodes; i++)
+// 	{
+// 	    cout << "for loop working..." << "\n";
+// 	    // Need to adjust start pos by some amount
+// 	    adjustedPosX += 10;
 
-	    cout << "new pos: " << adjustedPosX << "\n";
+// 	    cout << "new pos: " << adjustedPosX << "\n";
 	
-	    snakeNodes[i].setPosition(adjustedPosX, startPosY);
-	    snakeNodes[i].setRadius(snakeSize);
-	    snakeNodes[i].setPointCount(snakePoints);
-	    snakeNodes[i].setFillColor(snakeColor);
-	    snakeNodes[i].setOrigin(snakeSize, snakeSize);
-	    //snakeNodes[i].setTexture(&snakeTexture);
-	    // each origin should be fixed to the previous origin
-	    // add snake node to list and set each angle to follow the previous node
-	}
-    }
+// 	    snakeNodes[i].setPosition(adjustedPosX, startPosY);
+// 	    snakeNodes[i].setRadius(snakeSize);
+// 	    snakeNodes[i].setPointCount(snakePoints);
+// 	    snakeNodes[i].setFillColor(snakeColor);
+// 	    snakeNodes[i].setOrigin(snakeSize, snakeSize);
+// 	    //snakeNodes[i].setTexture(&snakeTexture);
+// 	    // each origin should be fixed to the previous origin
+// 	    // add snake node to list and set each angle to follow the previous node
+// 	}
+//     }
     
-public:
+// public:
     
-    // Snake constructor
-    Snake(float mx, float my, Color color, int nodes)
-    {
-	snakeColor = color;
-	numberOfNodes = nodes;	
-	startPosX = mx;
-	startPosY = my;
+//     // Snake constructor
+//     Snake(float mx, float my, Color color, int nodes)
+//     {
+// 	snakeColor = color;
+// 	numberOfNodes = nodes;	
+// 	startPosX = mx;
+// 	startPosY = my;
 
-	// This needs to go somewhere else for class scope
-	// if(!texture.loadFromFile("someImage.png"))
-	// {
-	//     cout << "Did not load image\n";
-	// }
+// 	// This needs to go somewhere else for class scope
+// 	// if(!texture.loadFromFile("someImage.png"))
+// 	// {
+// 	//     cout << "Did not load image\n";
+// 	// }
 	
-	snake.setPosition(mx, my);
-	snake.setRadius(snakeSize);
-	snake.setPointCount(snakePoints);
-	snake.setFillColor(color);
-	snake.setOrigin(snakeSize, snakeSize);
-	//shape.setTexture(&snakeTexture);
+// 	snake.setPosition(mx, my);
+// 	snake.setRadius(snakeSize);
+// 	snake.setPointCount(snakePoints);
+// 	snake.setFillColor(color);
+// 	snake.setOrigin(snakeSize, snakeSize);
+// 	//shape.setTexture(&snakeTexture);
 	
-       	snakeTail();
+//        	snakeTail();
         
+//     }
+
+//     // Call to update properties of object each frame
+//     void update(CircleShape& target)
+//     {
+// 	snake.setRotation(util.angleToPointAt(snake,target,-90.f));
+//     }
+
+//     // Call to draw the updated property values each frame
+//     void draw(RenderWindow& window)
+//     {
+// 	// Draw a single snake node
+// 	window.draw(snake);
+	
+// 	// Draw each other snake node to create a tail
+// 	for(int i = 0; i < numberOfNodes; i++)
+// 	{
+// 	    // cout << "drawing stuff..." << "\n";
+// 	    window.draw(snakeNodes[i]);
+// 	}
+//     }
+// };
+
+struct Position { int x, y; };
+
+class Snake {
+    constexpr static float defaultRadius = 30.f; 
+    constexpr static int defaultPointCount = 6;
+  
+    vector<CircleShape> bodyShapes; //includes head
+
+public:
+    Snake(Position pos,
+	  Color fillColor, 
+	  int bodyLength, 
+	  int pointCount = defaultPointCount,
+	  float radius   = defaultRadius )
+    {
+        //init body
+        bodyShapes.resize(bodyLength + 1);
+        for(auto& shp : bodyShapes)
+	{
+	    shp.setRadius(radius);
+	    shp.setPosition(pos.x, pos.y);
+	    shp.setPointCount(pointCount);
+	    shp.setFillColor(fillColor);
+	    shp.setOrigin(radius , radius);
+	    pos.y+=50;
+        }  
     }
 
-    // Call to update properties of object each frame
     void update(CircleShape& target)
     {
-	snake.setRotation(util.angleToPointAt(snake,target,-90.f));
+	//calculate your angle here
+	//float angle = ...;
+	//bodyShapes.front().setRotation(angle);
     }
-
-    // Call to draw the updated property values each frame
-    void draw(RenderWindow& window)
+  
+    void draw(RenderWindow& window) const
     {
-	// Draw a single snake node
-	window.draw(snake);
-	
-	// Draw each other snake node to create a tail
-	for(int i = 0; i < numberOfNodes; i++)
+	for(const auto& shp : bodyShapes)
 	{
-	    // cout << "drawing stuff..." << "\n";
-	    window.draw(snakeNodes[i]);
+	    window.draw(shp);
 	}
     }
 };
@@ -164,8 +208,9 @@ int main()
     Color color;
 
     // Creates a snake object in the center of the screen.
-    int snakeNodes = 5;
-    Snake snake{windowWidth / 2, windowHeight / 2, color.Green, snakeNodes};
+    int snakeBodySize{5};
+    Position position{windowWidth / 2, windowHeight /2};
+    Snake snake(position, color.Green, snakeBodySize);
 
     float deltaTime;
 
