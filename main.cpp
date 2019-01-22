@@ -31,7 +31,8 @@ public:
 	
 	// Takes the distance from the origin to the target and calculates tan(y/x) to get the
 	// desired angle.
-	desiredAngle = atan2(targetShape.getPosition().y - originalShape.getPosition().y, targetShape.getPosition().x - originalShape.getPosition().x) * (180/PI);
+	desiredAngle = atan2(targetShape.getPosition().y - originalShape.getPosition().y,
+			     targetShape.getPosition().x - originalShape.getPosition().x) * (180/PI);
 
 	// From [-180, 180] to [0, 360]
 	if(desiredAngle < 0)
@@ -48,112 +49,14 @@ public:
 
 // ----------------------------------------------------------------------------------- Main Objects
 
-// class Snake
-// {
-// private:
-
-//     Vector2f velocity; // Not used yet
-//     float angle; // I mean... its an angle...
-//     Util util; // Need to use to force each snakeNode to face the previous one
-//     Texture texture; // png for new look for the snake nodes
-//     Color snakeColor; // don't really need this atm, but it makes things look nice
-//     float startPosX; // class scope position variable
-//     float adjustedPosX; // holds value of adjusted value used to initialize each snake node
-//     float startPosY; // same as x
-//     int numberOfNodes; // should probably be used localy for every snake obeject ... idk
-//     CircleShape snake; // its a snake... really this is the head of the snake
-
-//     // this is actually the tail at this time... maybe I don't need the snake head? but somehow
-//     // I want to control the head and have the tail lag behind... idk...
-//     vector<CircleShape> snakeNodes; 
-    
-//     // Looking into using ternary to construct tail from vector of snakes
-//     void snakeTail()
-//     {
-// 	cout << "snakeTail() called." << "\n";
-// 	cout << "Number of nodes: " << numberOfNodes << "\n";
-// 	// Step through and set values for each snakeNode
-
-// 	// Initialize
-// 	snakeNodes.resize(numberOfNodes);
-
-// 	cout << "allocate memory for snakeNodes" << "\n";
-// 	adjustedPosX = startPosX;
-
-// 	cout << "adjustedPosX: " << adjustedPosX << "\n";
-	
-//         for(int i = 0; i < numberOfNodes; i++)
-// 	{
-// 	    cout << "for loop working..." << "\n";
-// 	    // Need to adjust start pos by some amount
-// 	    adjustedPosX += 10;
-
-// 	    cout << "new pos: " << adjustedPosX << "\n";
-	
-// 	    snakeNodes[i].setPosition(adjustedPosX, startPosY);
-// 	    snakeNodes[i].setRadius(snakeSize);
-// 	    snakeNodes[i].setPointCount(snakePoints);
-// 	    snakeNodes[i].setFillColor(snakeColor);
-// 	    snakeNodes[i].setOrigin(snakeSize, snakeSize);
-// 	    //snakeNodes[i].setTexture(&snakeTexture);
-// 	    // each origin should be fixed to the previous origin
-// 	    // add snake node to list and set each angle to follow the previous node
-// 	}
-//     }
-    
-// public:
-    
-//     // Snake constructor
-//     Snake(float mx, float my, Color color, int nodes)
-//     {
-// 	snakeColor = color;
-// 	numberOfNodes = nodes;	
-// 	startPosX = mx;
-// 	startPosY = my;
-
-// 	// This needs to go somewhere else for class scope
-// 	// if(!texture.loadFromFile("someImage.png"))
-// 	// {
-// 	//     cout << "Did not load image\n";
-// 	// }
-	
-// 	snake.setPosition(mx, my);
-// 	snake.setRadius(snakeSize);
-// 	snake.setPointCount(snakePoints);
-// 	snake.setFillColor(color);
-// 	snake.setOrigin(snakeSize, snakeSize);
-// 	//shape.setTexture(&snakeTexture);
-	
-//        	snakeTail();
-        
-//     }
-
-//     // Call to update properties of object each frame
-//     void update(CircleShape& target)
-//     {
-// 	snake.setRotation(util.angleToPointAt(snake,target,-90.f));
-//     }
-
-//     // Call to draw the updated property values each frame
-//     void draw(RenderWindow& window)
-//     {
-// 	// Draw a single snake node
-// 	window.draw(snake);
-	
-// 	// Draw each other snake node to create a tail
-// 	for(int i = 0; i < numberOfNodes; i++)
-// 	{
-// 	    // cout << "drawing stuff..." << "\n";
-// 	    window.draw(snakeNodes[i]);
-// 	}
-//     }
-// };
-
 struct Position { int x, y; };
 
 class Snake {
     constexpr static float defaultRadius = 30.f; 
     constexpr static int defaultPointCount = 6;
+    constexpr static float defaultVelocity = 10.f;
+    float currentVelocityX;
+    float currentVelocityY;
   
     vector<CircleShape> bodyShapes; //includes head
 
@@ -162,7 +65,7 @@ public:
 	  Color fillColor, 
 	  int bodyLength, 
 	  int pointCount = defaultPointCount,
-	  float radius   = defaultRadius )
+	  float radius   = defaultRadius)
     {
         //init body
         bodyShapes.resize(bodyLength + 1);
@@ -177,8 +80,43 @@ public:
         }  
     }
 
-    void update(CircleShape& target)
+    void move()
     {
+	if(Keyboard::isKeyPressed(Keyboard::W))
+	{
+	    currentVelocityX = 0;
+	    currentVelocityY = -defaultVelocity;
+	    cout << "W is pressed" << "\n";
+	}
+	if(Keyboard::isKeyPressed(Keyboard::A))
+	{
+	    currentVelocityX = -defaultVelocity;
+	    currentVelocityY = 0;
+	    cout << "A is pressed" << "\n";
+	}
+	if(Keyboard::isKeyPressed(Keyboard::S))
+	{
+	    currentVelocityX = 0;
+	    currentVelocityY = defaultVelocity;
+	    cout << "S is pressed" << "\n";
+	}
+	if(Keyboard::isKeyPressed(Keyboard::D))
+	{
+	    currentVelocityX = defaultVelocity;
+	    currentVelocityY = 0;
+	    cout << "D is pressed" << "\n";
+	}
+	// Move some stuff here
+	
+	for(auto& shp : bodyShapes)
+	{
+	    shp.move(currentVelocityX, currentVelocityY);
+        }
+    }
+
+    void update(float deltaTime)
+    {
+	move();
 	//calculate your angle here
 	//float angle = ...;
 	//bodyShapes.front().setRotation(angle);
@@ -213,14 +151,15 @@ int main()
     Snake snake(position, color.Green, snakeBodySize);
 
     float deltaTime;
+    float accumulator;
+    float t = 0.0f;
+    const float dt = 0.01;
 
     while (window.isOpen())
     {
 	// Restarts clock and returns time since last restart.
 	Time elapsed = clock.restart();
 	deltaTime = elapsed.asSeconds();
-
-	//cout << deltaTime << "\n";	
 
 	// Meh, an event
         Event event;
@@ -236,8 +175,11 @@ int main()
 
 	// Clear the window each frame
         window.clear();
+
+	// Update objects
+      	snake.update(deltaTime);
 	
-	// List of objects to draw
+	// Draw objects
 	snake.draw(window);
 
 	// Display the screen
